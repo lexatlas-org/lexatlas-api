@@ -71,23 +71,16 @@ if [[ -z "$PUBLISH_PROFILE" ]]; then
   exit 1
 fi
 
+ENCODED_PUBLISH_PROFILE=$(echo "$PUBLISH_PROFILE" | base64 -w 0)
 
 # Extract GitHub repo parts
 REPO_NAME=$(basename "$GITHUB_REPO" .git)
 REPO_OWNER=$(basename "$(dirname "$GITHUB_REPO")")
 
-# Write to temp file
-TMP_PROFILE_FILE=$(mktemp)
-echo "$PUBLISH_PROFILE" > "$TMP_PROFILE_FILE"
-
-# Push GitHub secret
-echo " Setting GitHub secret AZURE_PUBLISH_PROFILE..."
 gh secret set AZURE_PUBLISH_PROFILE \
-  -f "$TMP_PROFILE_FILE" \
+  --body "$ENCODED_PUBLISH_PROFILE" \
   -R "$REPO_OWNER/$REPO_NAME"
 
-cat "$TMP_PROFILE_FILE"
-rm "$TMP_PROFILE_FILE"
 
 # Generate GitHub Actions workflow
 echo " Generating GitHub Actions workflow..."
