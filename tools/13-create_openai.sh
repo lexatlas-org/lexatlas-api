@@ -13,6 +13,9 @@ else
   exit 1
 fi
 
+read -p "Subscription ID [default: $AZURE_SUBSCRIPTION_ID]: " SUBSCRIPTION_INPUT
+AZURE_SUBSCRIPTION_ID=${SUBSCRIPTION_INPUT:-$AZURE_SUBSCRIPTION_ID}
+
 read -p "Resource group name [default: $AZURE_RESOURCE_GROUP]: " RG_INPUT
 AZURE_RESOURCE_GROUP=${RG_INPUT:-$AZURE_RESOURCE_GROUP}
 
@@ -34,8 +37,9 @@ AZURE_OPENAI_MODEL_VERSION=${MODEL_VERSION_INPUT:-$AZURE_OPENAI_MODEL_VERSION}
 
 echo " Creating Azure OpenAI resource: $AZURE_OPENAI_NAME in $AZURE_LOCATION"
 az cognitiveservices account create \
-  --name "$AZURE_OPENAI_NAME" \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_OPENAI_NAME" \
   --location "$AZURE_LOCATION" \
   --kind OpenAI \
   --sku S0 \
@@ -47,8 +51,9 @@ sleep 10  # Optional: Add delay or polling if needed
 
 echo " Deploying GPT-4o model as: $AZURE_OPENAI_DEPLOYMENT"
 az cognitiveservices account deployment create \
-  --name "$AZURE_OPENAI_NAME" \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_OPENAI_NAME" \
   --deployment-name "$AZURE_OPENAI_DEPLOYMENT" \
   --model-name "$AZURE_OPENAI_MODEL_NAME" \
   --model-version "$AZURE_OPENAI_MODEL_VERSION" \
@@ -58,13 +63,15 @@ az cognitiveservices account deployment create \
 
 
 AZURE_OPENAI_ENDPOINT=$(az cognitiveservices account show \
-  --name "$AZURE_OPENAI_NAME" \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_OPENAI_NAME" \
   --query "properties.endpoint" -o tsv)
 
 AZURE_OPENAI_KEY=$(az cognitiveservices account keys list \
-  --name "$AZURE_OPENAI_NAME" \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_OPENAI_NAME" \
   --query "key1" -o tsv)
 
 echo " Azure OpenAI is ready!"
