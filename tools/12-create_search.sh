@@ -36,9 +36,3 @@ AZURE_SEARCH_KEY=$(az search admin-key show \
 
 echo " Azure Search ready!"
 echo "AZURE_SEARCH_KEY=$AZURE_SEARCH_KEY"
-
-
-# Optional: Create an index
-# optional: create indexer
-# optional: create data source
-# optional: create skillset
