@@ -30,7 +30,10 @@ az storage account create \
   --name "$AZURE_STORAGE_ACCOUNT_NAME" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
   --location "$AZURE_LOCATION" \
-  --sku Standard_LRS
+  --sku Standard_LRS \
+  --allow-blob-public-access true
+  # Allow Blob anonymous access
+
 
 AZURE_STORAGE_ACCOUNT_KEY=$(az storage account keys list \
   --account-name "$AZURE_STORAGE_ACCOUNT_NAME" \
