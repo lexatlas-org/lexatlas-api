@@ -1,10 +1,11 @@
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from config import settings
+from routes.api import router as api_router
 
-# from routes.api import router as api_router
-from config import LEXATLAS_API_KEY
-
-app = FastAPI(title="LexAtlas API - Phase 1")
+app = FastAPI(title="LexAtlas RAG API", 
+              version="1.0.0", 
+              description="LexAtlas RAG API for document retrieval and question answering.")
 
 @app.middleware("http")
 async def verify_api_key(request: Request, call_next):
@@ -12,24 +13,19 @@ async def verify_api_key(request: Request, call_next):
         return await call_next(request)
 
     api_key = request.headers.get("x-api-key")
-
-    if api_key is None:
-        return JSONResponse(
-            status_code=401,
-            content={"detail": "Missing 'x-api-key' header. Please include your API key."}
-        )
-
-    if api_key != LEXATLAS_API_KEY:
-        return JSONResponse(
-            status_code=401,
-            content={"detail": "Invalid API key. Access denied."}
-        )
-
+    if not api_key:
+        return JSONResponse(status_code=401, content={"detail": "Missing 'x-api-key' header."})
+    if api_key != settings.LEXATLAS_API_KEY:
+        return JSONResponse(status_code=401, content={"detail": "Invalid API key."})
     return await call_next(request)
+
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello World from FastAPI 🚀", "version": "1.0.0"}
+    return {
+        "message": "Welcome to the LexAtlas RAG API",
+        "description": "This API provides document retrieval and question answering capabilities.", 
+        "version": "1.0.0"
+        }
 
-# app.include_router(api_router, prefix="/api")
-
+app.include_router(api_router)
