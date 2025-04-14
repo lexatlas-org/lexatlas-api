@@ -17,11 +17,11 @@
 # read -p " Web App name [default: $APP_NAME]: " APP_NAME_INPUT
 # APP_NAME=${APP_NAME_INPUT:-$APP_NAME}
 
-# read -p " Resource group [default: $RG_NAME]: " RG_NAME_INPUT
-# RG_NAME=${RG_NAME_INPUT:-$RG_NAME}
+# read -p " Resource group [default: $AZURE_RESOURCE_GROUP]: " RG_NAME_INPUT
+# AZURE_RESOURCE_GROUP=${RG_NAME_INPUT:-$AZURE_RESOURCE_GROUP}
 
-# read -p " Azure region [default: $LOCATION]: " LOCATION_INPUT
-# LOCATION=${LOCATION_INPUT:-$LOCATION}
+# read -p " Azure region [default: $AZURE_LOCATION]: " LOCATION_INPUT
+# AZURE_LOCATION=${LOCATION_INPUT:-$AZURE_LOCATION}
 
 # read -p " GitHub repo URL [default: $GITHUB_REPO]: " GITHUB_REPO_INPUT
 # GITHUB_REPO=${GITHUB_REPO_INPUT:-$GITHUB_REPO}
@@ -30,8 +30,8 @@
 # BRANCH=${BRANCH_INPUT:-$BRANCH}
 
 # # Create Resource Group
-# echo " Creating resource group: $RG_NAME"
-# az group create --name "$RG_NAME" --location "$LOCATION"
+# echo " Creating resource group: $AZURE_RESOURCE_GROUP"
+# az group create --name "$AZURE_RESOURCE_GROUP" --location "$AZURE_LOCATION"
 
 
 # # | SKU   | Tier       | Cores | RAM     | Price (Est.)    |
@@ -47,14 +47,14 @@
 # echo " Creating App Service Plan..."
 # az appservice plan create \
 #   --name "${APP_NAME}-plan" \
-#   --resource-group "$RG_NAME" \
+#   --resource-group "$AZURE_RESOURCE_GROUP" \
 #   --sku B1 \
 #   --is-linux
 
 # # Create Azure Web App
 # echo " Creating Azure Web App: $APP_NAME"
 # az webapp create \
-#   --resource-group "$RG_NAME" \
+#   --resource-group "$AZURE_RESOURCE_GROUP" \
 #   --plan "${APP_NAME}-plan" \
 #   --name "$APP_NAME" \
 #   --runtime "PYTHON|3.11"
@@ -63,7 +63,7 @@
 # echo " Retrieving publish profile for $APP_NAME..."
 # PUBLISH_PROFILE=$(az webapp deployment list-publishing-profiles \
 #   --name "$APP_NAME" \
-#   --resource-group "$RG_NAME" \
+#   --resource-group "$AZURE_RESOURCE_GROUP" \
 #   --xml)
 
 # if [[ -z "$PUBLISH_PROFILE" ]]; then

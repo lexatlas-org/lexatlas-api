@@ -13,28 +13,28 @@ else
   exit 1
 fi
 
-read -p "Resource group name [default: $RG_NAME]: " RG_INPUT
-RG_NAME=${RG_INPUT:-$RG_NAME}
+read -p "Resource group name [default: $AZURE_RESOURCE_GROUP]: " RG_INPUT
+AZURE_RESOURCE_GROUP=${RG_INPUT:-$AZURE_RESOURCE_GROUP}
 
-read -p "Region [default: $LOCATION]: " LOC_INPUT
-LOCATION=${LOC_INPUT:-$LOCATION}
+read -p "Region [default: $AZURE_LOCATION]: " LOC_INPUT
+AZURE_LOCATION=${LOC_INPUT:-$AZURE_LOCATION}
 
 read -p "Cognitive Services name [default: $AZURE_AISERVICE_NAME]: " COG_INPUT
 AZURE_AISERVICE_NAME=${COG_INPUT:-$AZURE_AISERVICE_NAME}
 
-echo " Creating Azure Cognitive Services resource: $AZURE_AISERVICE_NAME in $LOCATION"
+echo " Creating Azure Cognitive Services resource: $AZURE_AISERVICE_NAME in $AZURE_LOCATION"
 
 az cognitiveservices account create \
   --name "$AZURE_AISERVICE_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --kind CognitiveServices \
   --sku S0 \
-  --location "$LOCATION" \
+  --location "$AZURE_LOCATION" \
   --yes
 
 AZURE_AISERVICE_KEY=$(az cognitiveservices account keys list \
   --name "$AZURE_AISERVICE_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "key1" -o tsv)
 
 echo " Azure AI Services ready!"

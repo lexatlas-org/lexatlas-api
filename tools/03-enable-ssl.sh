@@ -17,8 +17,8 @@
 # read -p " Web App name [default: $APP_NAME]: " APP_NAME_INPUT
 # APP_NAME=${APP_NAME_INPUT:-$APP_NAME}
 
-# read -p " Resource group [default: $RG_NAME]: " RG_NAME_INPUT
-# RG_NAME=${RG_NAME_INPUT:-$RG_NAME}
+# read -p " Resource group [default: $AZURE_RESOURCE_GROUP]: " RG_NAME_INPUT
+# AZURE_RESOURCE_GROUP=${RG_NAME_INPUT:-$AZURE_RESOURCE_GROUP}
 
 # read -p " Custom domain [default: $CUSTOM_DOMAIN]: " CUSTOM_DOMAIN_INPUT
 # CUSTOM_DOMAIN=${CUSTOM_DOMAIN_INPUT:-$CUSTOM_DOMAIN}
@@ -32,7 +32,7 @@
 # # Check if domain is assigned
 # echo " Checking if domain is assigned..."
 # HOSTNAME_EXISTS=$(az webapp config hostname list \
-#   --resource-group "$RG_NAME" \
+#   --resource-group "$AZURE_RESOURCE_GROUP" \
 #   --webapp-name "$APP_NAME" \
 #   --query "[?name=='$CUSTOM_DOMAIN']" \
 #   --output tsv)
@@ -47,12 +47,12 @@
 # echo " Requesting Azure-managed SSL certificate for $CUSTOM_DOMAIN..."
 # az webapp config ssl create \
 #   --name "$APP_NAME" \
-#   --resource-group "$RG_NAME" \
+#   --resource-group "$AZURE_RESOURCE_GROUP" \
 #   --hostname "$CUSTOM_DOMAIN"
 
 # # Get certificate thumbprint
 # THUMBPRINT=$(az webapp config ssl list \
-#   --resource-group "$RG_NAME" \
+#   --resource-group "$AZURE_RESOURCE_GROUP" \
 #   --query "[?hostNames[?contains(@, '$CUSTOM_DOMAIN')]].thumbprint" \
 #   --output tsv)
 
@@ -66,7 +66,7 @@
 # echo " Binding SSL certificate..."
 # az webapp config ssl bind \
 #   --name "$APP_NAME" \
-#   --resource-group "$RG_NAME" \
+#   --resource-group "$AZURE_RESOURCE_GROUP" \
 #   --certificate-thumbprint "$THUMBPRINT" \
 #   --ssl-type SNI \
 #   --hostname "$CUSTOM_DOMAIN"

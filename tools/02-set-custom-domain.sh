@@ -17,8 +17,8 @@
 # read -p " Web App name [default: $APP_NAME]: " APP_NAME_INPUT
 # APP_NAME=${APP_NAME_INPUT:-$APP_NAME}
 
-# read -p " Resource group [default: $RG_NAME]: " RG_NAME_INPUT
-# RG_NAME=${RG_NAME_INPUT:-$RG_NAME}
+# read -p " Resource group [default: $AZURE_RESOURCE_GROUP]: " RG_NAME_INPUT
+# AZURE_RESOURCE_GROUP=${RG_NAME_INPUT:-$AZURE_RESOURCE_GROUP}
 
 # read -p " Custom domain (e.g., www.example.com) [default: $CUSTOM_DOMAIN]: " CUSTOM_DOMAIN_INPUT
 # CUSTOM_DOMAIN=${CUSTOM_DOMAIN_INPUT:-$CUSTOM_DOMAIN}
@@ -33,7 +33,7 @@
 # echo " Getting domain verification token..."
 # TOKEN=$(az webapp config hostname get-external-ip \
 #   --name "$APP_NAME" \
-#   --resource-group "$RG_NAME")
+#   --resource-group "$AZURE_RESOURCE_GROUP")
 
 # if [[ -z "$TOKEN" ]]; then
 #   echo " Failed to get external IP from Azure."
@@ -72,7 +72,7 @@
 # echo " Assigning custom domain '$CUSTOM_DOMAIN' to app '$APP_NAME'..."
 # az webapp config hostname add \
 #   --webapp-name "$APP_NAME" \
-#   --resource-group "$RG_NAME" \
+#   --resource-group "$AZURE_RESOURCE_GROUP" \
 #   --hostname "$CUSTOM_DOMAIN"
 
 # echo " Custom domain successfully assigned!"

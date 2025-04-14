@@ -18,8 +18,8 @@ else
 fi
 
 # Interactive prompts
-read -p "Resource group name [default: $RG_NAME]: " RG_INPUT
-RG_NAME=${RG_INPUT:-$RG_NAME}
+read -p "Resource group name [default: $AZURE_RESOURCE_GROUP]: " RG_INPUT
+AZURE_RESOURCE_GROUP=${RG_INPUT:-$AZURE_RESOURCE_GROUP}
 
 read -p "Storage account name [default: $AZURE_STORAGE_ACCOUNT_NAME]: " STG_INPUT
 AZURE_STORAGE_ACCOUNT_NAME=${STG_INPUT:-$AZURE_STORAGE_ACCOUNT_NAME}
@@ -45,13 +45,13 @@ AZURE_SEARCH_INDEXER=${INDEXER_INPUT:-$AZURE_SEARCH_INDEXER}
 # Get storage connection string
 AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string \
   --name "$AZURE_STORAGE_ACCOUNT_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "connectionString" -o tsv)
 
 echo " Creating data source: $AZURE_SEARCH_DATASOURCE"
 az search datasource create \
   --name "$AZURE_SEARCH_DATASOURCE" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --service-name "$AZURE_SEARCH_NAME" \
   --type azureblob \
   --connection-string "$AZURE_STORAGE_CONNECTION_STRING" \
@@ -60,7 +60,7 @@ az search datasource create \
 echo " Creating skillset: $AZURE_SEARCH_SKILLSET"
 az search skillset create \
   --name "$AZURE_SEARCH_SKILLSET" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --service-name "$AZURE_SEARCH_NAME" \
   --skills '[]' \
   --description "Default skillset for blob ingestion"
@@ -68,7 +68,7 @@ az search skillset create \
 echo " Creating index: $AZURE_SEARCH_INDEX"
 az search index create \
   --name "$AZURE_SEARCH_INDEX" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --service-name "$AZURE_SEARCH_NAME" \
   --fields '
 [
@@ -80,7 +80,7 @@ az search index create \
 echo " Creating indexer: $AZURE_SEARCH_INDEXER"
 az search indexer create \
   --name "$AZURE_SEARCH_INDEXER" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --service-name "$AZURE_SEARCH_NAME" \
   --data-source-name "$AZURE_SEARCH_DATASOURCE" \
   --target-index-name "$AZURE_SEARCH_INDEX" \

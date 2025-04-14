@@ -24,7 +24,7 @@ echo "=============================="
 # Blob Storage Key
 STORAGE_KEY=$(az storage account keys list \
   --account-name "$AZURE_STORAGE_ACCOUNT_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "[0].value" -o tsv)
 
 echo ""
@@ -36,7 +36,7 @@ echo "  Key:            $STORAGE_KEY"
 # --- 11 - Azure AI Services ---
 AISERVICE_KEY=$(az cognitiveservices account keys list \
   --name "$AZURE_AISERVICE_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "key1" -o tsv)
 
 echo ""
@@ -47,7 +47,7 @@ echo "  Key:              $AISERVICE_KEY"
 # --- 12 - Azure Cognitive Search ---
 SEARCH_KEY=$(az search admin-key show \
   --service-name "$AZURE_SEARCH_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "primaryKey" -o tsv)
 
 echo ""
@@ -58,12 +58,12 @@ echo "  Key:              $SEARCH_KEY"
 # --- 13 - Azure OpenAI ---
 OPENAI_ENDPOINT=$(az cognitiveservices account show \
   --name "$AZURE_OPENAI_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "properties.endpoint" -o tsv)
 
 OPENAI_KEY=$(az cognitiveservices account keys list \
   --name "$AZURE_OPENAI_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "key1" -o tsv)
 
 echo ""

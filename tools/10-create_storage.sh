@@ -13,11 +13,11 @@ else
   exit 1
 fi
 
-read -p "Resource group name [default: $RG_NAME]: " RG_INPUT
-RG_NAME=${RG_INPUT:-$RG_NAME}
+read -p "Resource group name [default: $AZURE_RESOURCE_GROUP]: " RG_INPUT
+AZURE_RESOURCE_GROUP=${RG_INPUT:-$AZURE_RESOURCE_GROUP}
 
-read -p "Region [default: $LOCATION]: " LOC_INPUT
-LOCATION=${LOC_INPUT:-$LOCATION}
+read -p "Region [default: $AZURE_LOCATION]: " LOC_INPUT
+AZURE_LOCATION=${LOC_INPUT:-$AZURE_LOCATION}
 
 read -p "Storage account name [default: $AZURE_STORAGE_ACCOUNT_NAME]: " STG_INPUT
 AZURE_STORAGE_ACCOUNT_NAME=${STG_INPUT:-$AZURE_STORAGE_ACCOUNT_NAME}
@@ -25,16 +25,16 @@ AZURE_STORAGE_ACCOUNT_NAME=${STG_INPUT:-$AZURE_STORAGE_ACCOUNT_NAME}
 read -p "Blob container name [default: $AZURE_STORAGE_CONTAINER]: " CONTAINER_INPUT
 AZURE_STORAGE_CONTAINER=${CONTAINER_INPUT:-$AZURE_STORAGE_CONTAINER}
 
-echo " Creating Storage Account: $AZURE_STORAGE_ACCOUNT_NAME in $LOCATION"
+echo " Creating Storage Account: $AZURE_STORAGE_ACCOUNT_NAME in $AZURE_LOCATION"
 az storage account create \
   --name "$AZURE_STORAGE_ACCOUNT_NAME" \
-  --resource-group "$RG_NAME" \
-  --location "$LOCATION" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
+  --location "$AZURE_LOCATION" \
   --sku Standard_LRS
 
 AZURE_STORAGE_ACCOUNT_KEY=$(az storage account keys list \
   --account-name "$AZURE_STORAGE_ACCOUNT_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "[0].value" --output tsv)
 
 echo " Creating blob container: $AZURE_STORAGE_CONTAINER"

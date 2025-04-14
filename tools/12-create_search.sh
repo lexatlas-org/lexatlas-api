@@ -13,11 +13,11 @@ else
   exit 1
 fi
 
-read -p "Resource group name [default: $RG_NAME]: " RG_INPUT
-RG_NAME=${RG_INPUT:-$RG_NAME}
+read -p "Resource group name [default: $AZURE_RESOURCE_GROUP]: " RG_INPUT
+AZURE_RESOURCE_GROUP=${RG_INPUT:-$AZURE_RESOURCE_GROUP}
 
-read -p "Region [default: $LOCATION]: " LOC_INPUT
-LOCATION=${LOC_INPUT:-$LOCATION}
+read -p "Region [default: $AZURE_LOCATION]: " LOC_INPUT
+AZURE_LOCATION=${LOC_INPUT:-$AZURE_LOCATION}
 
 read -p "Search service name [default: $AZURE_SEARCH_NAME]: " SEARCH_NAME_INPUT
 AZURE_SEARCH_NAME=${SEARCH_NAME_INPUT:-$AZURE_SEARCH_NAME}
@@ -25,13 +25,13 @@ AZURE_SEARCH_NAME=${SEARCH_NAME_INPUT:-$AZURE_SEARCH_NAME}
 echo " Creating Azure AI Search service: $AZURE_SEARCH_NAME"
 az search service create \
   --name "$AZURE_SEARCH_NAME" \
-  --resource-group "$RG_NAME" \
-  --location "$LOCATION" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
+  --location "$AZURE_LOCATION" \
   --sku basic
 
 AZURE_SEARCH_KEY=$(az search admin-key show \
   --service-name "$AZURE_SEARCH_NAME" \
-  --resource-group "$RG_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "primaryKey" --output tsv)
 
 echo " Azure Search ready!"
