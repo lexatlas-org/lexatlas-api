@@ -30,7 +30,7 @@ Accept: application/json
 
 ### 
 # @name search
-GET {{base_url}}/search?q=nonprofit%20california&top_k=2
+GET {{base_url}}/search?q=nonprofit%20New%20York&top_k=5
 X-API-Key: {{api_key}}
 Content-Type: application/json
 Accept: application/json

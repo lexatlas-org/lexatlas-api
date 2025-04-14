@@ -4,7 +4,7 @@ from config import settings
 from routes.api import router as api_router
 
 app = FastAPI(title="LexAtlas RAG API", 
-              version="1.0.0", 
+              version="1.0.1", 
               description="LexAtlas RAG API for document retrieval and question answering.")
 
 @app.middleware("http")
@@ -25,7 +25,7 @@ def read_root():
     return {
         "message": "Welcome to the LexAtlas RAG API",
         "description": "This API provides document retrieval and question answering capabilities.", 
-        "version": "1.0.0"
+        "version": "1.0.1"
         }
 
 app.include_router(api_router)
