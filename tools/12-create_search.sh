@@ -13,6 +13,9 @@ else
   exit 1
 fi
 
+read -p "Subscription ID [default: $AZURE_SUBSCRIPTION_ID]: " SUBSCRIPTION_INPUT
+AZURE_SUBSCRIPTION_ID=${SUBSCRIPTION_INPUT:-$AZURE_SUBSCRIPTION_ID}
+
 read -p "Resource group name [default: $AZURE_RESOURCE_GROUP]: " RG_INPUT
 AZURE_RESOURCE_GROUP=${RG_INPUT:-$AZURE_RESOURCE_GROUP}
 
@@ -24,8 +27,9 @@ AZURE_SEARCH_NAME=${SEARCH_NAME_INPUT:-$AZURE_SEARCH_NAME}
 
 echo " Creating Azure AI Search service: $AZURE_SEARCH_NAME"
 az search service create \
-  --name "$AZURE_SEARCH_NAME" \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_SEARCH_NAME" \
   --location "$AZURE_LOCATION" \
   --sku basic
 
