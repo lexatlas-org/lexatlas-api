@@ -1,0 +1,10 @@
+# local with flask run
+@base_url=http://127.0.0.1:8000
+@api_key=supersecuredevtokens
+ 
+
+###
+GET {{base_url}}
+X-API-Key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
