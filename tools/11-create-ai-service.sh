@@ -13,6 +13,9 @@ else
   exit 1
 fi
 
+read -p "Subscription ID [default: $AZURE_SUBSCRIPTION_ID]: " SUBSCRIPTION_INPUT
+AZURE_SUBSCRIPTION_ID=${SUBSCRIPTION_INPUT:-$AZURE_SUBSCRIPTION_ID}
+
 read -p "Resource group name [default: $AZURE_RESOURCE_GROUP]: " RG_INPUT
 AZURE_RESOURCE_GROUP=${RG_INPUT:-$AZURE_RESOURCE_GROUP}
 
@@ -25,8 +28,9 @@ AZURE_AISERVICE_NAME=${COG_INPUT:-$AZURE_AISERVICE_NAME}
 echo " Creating Azure Cognitive Services resource: $AZURE_AISERVICE_NAME in $AZURE_LOCATION"
 
 az cognitiveservices account create \
-  --name "$AZURE_AISERVICE_NAME" \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_AISERVICE_NAME" \
   --kind CognitiveServices \
   --sku S0 \
   --location "$AZURE_LOCATION" \
