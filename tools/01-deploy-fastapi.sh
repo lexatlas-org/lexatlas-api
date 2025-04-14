@@ -1,5 +1,10 @@
 # #!/bin/bash
 
+
+# startup command 
+# gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
+
+
 # # =======================================
 # # Azure App Service - FastAPI Deployment
 # # =======================================
