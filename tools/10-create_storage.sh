@@ -28,6 +28,9 @@ AZURE_STORAGE_ACCOUNT_NAME=${STG_INPUT:-$AZURE_STORAGE_ACCOUNT_NAME}
 read -p "Blob container name [default: $AZURE_STORAGE_CONTAINER]: " CONTAINER_INPUT
 AZURE_STORAGE_CONTAINER=${CONTAINER_INPUT:-$AZURE_STORAGE_CONTAINER}
 
+echo " Creating Resource Group: $AZURE_RESOURCE_GROUP"
+az group create --name "$AZURE_RESOURCE_GROUP" --location "$AZURE_LOCATION" --subscription "$AZURE_SUBSCRIPTION_ID"
+
 echo " Creating Storage Account: $AZURE_STORAGE_ACCOUNT_NAME in $AZURE_LOCATION"
 az storage account create \
   --subscription "$AZURE_SUBSCRIPTION_ID" \
