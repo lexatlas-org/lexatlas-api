@@ -60,6 +60,19 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
+        
+      - name: Create .env file from GitHub Secrets
+        run: |
+          echo "LEXATLAS_API_KEY=${{ secrets.LEXATLAS_API_KEY }}" >> .env
+          echo "AZURE_OPENAI_KEY=${{ secrets.AZURE_OPENAI_KEY }}" >> .env
+          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> .env
+          echo "AZURE_OPENAI_DEPLOYMENT=${{ secrets.AZURE_OPENAI_DEPLOYMENT }}" >> .env
+          echo "AZURE_SEARCH_KEY=${{ secrets.AZURE_SEARCH_KEY }}" >> .env
+          echo "AZURE_SEARCH_ENDPOINT=${{ secrets.AZURE_SEARCH_ENDPOINT }}" >> .env
+          echo "AZURE_SEARCH_INDEX=${{ secrets.AZURE_SEARCH_INDEX }}" >> .env
+          echo "AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" >> .env
+          echo "AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" >> .env
+          echo "AZURE_STORAGE_CONTAINER=${{ secrets.AZURE_STORAGE_CONTAINER }}" >> .env
 
       
       - name: 'Deploy to Azure Web App'
