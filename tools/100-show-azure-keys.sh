@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================
-#  Show Azure Resource Keys and Endpoints
+# Generate Core Azure ENV Vars for Agentic RAG
 # ============================
 
 # Load environment from .env file
@@ -13,63 +13,62 @@ else
   exit 1
 fi
 
-echo ""
-echo "=============================="
-echo " Azure Resource Credentials"
-echo "=============================="
+# Check that all required base vars are set
+required_vars=(
+  AZURE_RESOURCE_GROUP
+  AZURE_OPENAI_NAME
+  AZURE_OPENAI_DEPLOYMENT
+  AZURE_SEARCH_NAME
+  AZURE_SEARCH_INDEX
+  AZURE_STORAGE_ACCOUNT_NAME
+  AZURE_STORAGE_CONTAINER
+)
 
+for var in "${required_vars[@]}"; do
+  if [[ -z "${!var:-}" ]]; then
+    echo "❗ Missing environment variable: $var"
+    exit 1
+  fi
+done
 
-
-# --- 10 - Azure Blob Storage ---
-# Blob Storage Key
-STORAGE_KEY=$(az storage account keys list \
-  --account-name "$AZURE_STORAGE_ACCOUNT_NAME" \
-  --resource-group "$AZURE_RESOURCE_GROUP" \
-  --query "[0].value" -o tsv)
-
-echo ""
-echo " Azure Blob Storage"
-echo "  Account:        $AZURE_STORAGE_ACCOUNT_NAME"
-echo "  Container:      $AZURE_STORAGE_CONTAINER"
-echo "  Key:            $STORAGE_KEY"
-
-# --- 11 - Azure AI Services ---
-AISERVICE_KEY=$(az cognitiveservices account keys list \
-  --name "$AZURE_AISERVICE_NAME" \
-  --resource-group "$AZURE_RESOURCE_GROUP" \
-  --query "key1" -o tsv)
-
-echo ""
-echo " Azure AI Services"
-echo "  Resource Name:    $AZURE_AISERVICE_NAME"
-echo "  Key:              $AISERVICE_KEY"
-
-# --- 12 - Azure Cognitive Search ---
-SEARCH_KEY=$(az search admin-key show \
-  --service-name "$AZURE_SEARCH_NAME" \
-  --resource-group "$AZURE_RESOURCE_GROUP" \
-  --query "primaryKey" -o tsv)
-
-echo ""
-echo " Azure Cognitive Search"
-echo "  Search Name:      $AZURE_SEARCH_NAME"
-echo "  Key:              $SEARCH_KEY"
-
-# --- 13 - Azure OpenAI ---
-OPENAI_ENDPOINT=$(az cognitiveservices account show \
+# === 1. Azure OpenAI ===
+AZURE_OPENAI_ENDPOINT=$(az cognitiveservices account show \
   --name "$AZURE_OPENAI_NAME" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "properties.endpoint" -o tsv)
 
-OPENAI_KEY=$(az cognitiveservices account keys list \
+AZURE_OPENAI_KEY=$(az cognitiveservices account keys list \
   --name "$AZURE_OPENAI_NAME" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
   --query "key1" -o tsv)
 
-echo ""
-echo " Azure OpenAI"
-echo "  Resource Name:    $AZURE_OPENAI_NAME"
-echo "  Deployment:       $AZURE_OPENAI_DEPLOYMENT"
-echo "  Endpoint:         $OPENAI_ENDPOINT"
-echo "  Key:              $OPENAI_KEY"
+# === 2. Azure Cognitive Search ===
+AZURE_SEARCH_ENDPOINT="https://${AZURE_SEARCH_NAME}.search.windows.net"
+AZURE_SEARCH_KEY=$(az search admin-key show \
+  --service-name "$AZURE_SEARCH_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
+  --query "primaryKey" -o tsv)
 
+# === 3. Azure Blob Storage ===
+AZURE_STORAGE_ACCOUNT_KEY=$(az storage account keys list \
+  --account-name "$AZURE_STORAGE_ACCOUNT_NAME" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
+  --query "[0].value" -o tsv)
+
+# === Output as .env format ===
+echo ""
+echo " Generated .env Variables:"
+echo "----------------------------"
+cat <<EOF
+AZURE_OPENAI_KEY=$AZURE_OPENAI_KEY
+AZURE_OPENAI_ENDPOINT=$AZURE_OPENAI_ENDPOINT
+AZURE_OPENAI_DEPLOYMENT=$AZURE_OPENAI_DEPLOYMENT
+
+AZURE_SEARCH_ENDPOINT=$AZURE_SEARCH_ENDPOINT
+AZURE_SEARCH_INDEX=$AZURE_SEARCH_INDEX
+AZURE_SEARCH_KEY=$AZURE_SEARCH_KEY
+
+AZURE_STORAGE_ACCOUNT_NAME=$AZURE_STORAGE_ACCOUNT_NAME
+AZURE_STORAGE_ACCOUNT_KEY=$AZURE_STORAGE_ACCOUNT_KEY
+AZURE_STORAGE_CONTAINER=$AZURE_STORAGE_CONTAINER
+EOF
