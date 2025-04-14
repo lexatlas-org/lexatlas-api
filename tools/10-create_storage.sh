@@ -13,6 +13,9 @@ else
   exit 1
 fi
 
+read -p "Subscription ID [default: $AZURE_SUBSCRIPTION_ID]: " SUBSCRIPTION_INPUT
+AZURE_SUBSCRIPTION_ID=${SUBSCRIPTION_INPUT:-$AZURE_SUBSCRIPTION_ID}
+
 read -p "Resource group name [default: $AZURE_RESOURCE_GROUP]: " RG_INPUT
 AZURE_RESOURCE_GROUP=${RG_INPUT:-$AZURE_RESOURCE_GROUP}
 
@@ -27,8 +30,9 @@ AZURE_STORAGE_CONTAINER=${CONTAINER_INPUT:-$AZURE_STORAGE_CONTAINER}
 
 echo " Creating Storage Account: $AZURE_STORAGE_ACCOUNT_NAME in $AZURE_LOCATION"
 az storage account create \
-  --name "$AZURE_STORAGE_ACCOUNT_NAME" \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
+  --name "$AZURE_STORAGE_ACCOUNT_NAME" \
   --location "$AZURE_LOCATION" \
   --sku Standard_LRS \
   --allow-blob-public-access true
@@ -36,18 +40,19 @@ az storage account create \
 
 
 AZURE_STORAGE_ACCOUNT_KEY=$(az storage account keys list \
-  --account-name "$AZURE_STORAGE_ACCOUNT_NAME" \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
+  --account-name "$AZURE_STORAGE_ACCOUNT_NAME" \
   --query "[0].value" --output tsv)
 
 echo " Creating blob container: $AZURE_STORAGE_CONTAINER"
 az storage container create \
+  --subscription "$AZURE_SUBSCRIPTION_ID" \
+  --resource-group "$AZURE_RESOURCE_GROUP" \
   --account-name "$AZURE_STORAGE_ACCOUNT_NAME" \
   --name "$AZURE_STORAGE_CONTAINER" \
-  --account-key "$AZURE_STORAGE_ACCOUNT_KEY" \
-  --public-access off
+  --account-key "$AZURE_STORAGE_ACCOUNT_KEY"  
+  # --public-access off
 
 echo " Done!"
 echo "AZURE_STORAGE_ACCOUNT_KEY=$AZURE_STORAGE_ACCOUNT_KEY"
-
-# optional: upload files
