@@ -70,6 +70,7 @@ jobs:
           echo "AZURE_SEARCH_KEY=${{ secrets.AZURE_SEARCH_KEY }}" >> .env
           echo "AZURE_SEARCH_ENDPOINT=${{ secrets.AZURE_SEARCH_ENDPOINT }}" >> .env
           echo "AZURE_SEARCH_INDEX=${{ secrets.AZURE_SEARCH_INDEX }}" >> .env
+          echo "AZURE_SEARCH_SEMANTIC_CONFIG_NAME=${{ secrets.AZURE_SEARCH_SEMANTIC_CONFIG_NAME }}" >> .env
           echo "AZURE_STORAGE_ACCOUNT_NAME=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" >> .env
           echo "AZURE_STORAGE_ACCOUNT_KEY=${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}" >> .env
           echo "AZURE_STORAGE_CONTAINER=${{ secrets.AZURE_STORAGE_CONTAINER }}" >> .env
