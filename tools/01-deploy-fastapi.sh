@@ -3,6 +3,7 @@
 
 # startup command 
 # gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
+# gunicorn main:app   -w 4 -k uvicorn.workers.UvicornWorker --timeout 600 --access-logfile - --error-logfile -
 
 
 # # =======================================
