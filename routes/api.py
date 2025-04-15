@@ -56,7 +56,7 @@ def query(payload: QueryRequest):
     answer = run_llm_query(chunks, payload.question)
     return QueryResponse(
         answer=answer,
-        source="Azure OpenAI (mock)",
+        source="Azure OpenAI",
         used_chunks=chunks,
         timestamp=datetime.datetime.utcnow().isoformat()
     )

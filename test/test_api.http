@@ -48,9 +48,23 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "question": "Do I need to register with the Attorney General?",
+  "question": "Summary the information",
   "context_id": "{{search.response.body.context_id}}"
 }
+
+
+###
+# @name query
+POST {{base_url}}/query
+X-API-Key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "question": "How is New York? My question is about hotels.",
+  "context_id": "{{search.response.body.context_id}}"
+}
+
 
 # -----------------------------------------------------------------------------
 # POST endpoints
