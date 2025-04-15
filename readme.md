@@ -79,6 +79,10 @@ The .env file contains environment variables required for the project to run. Fo
    Start the FastAPI application to verify the setup:
    ```bash
    uvicorn main:app --reload
+
+
+   # start 
+   gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
    ```
 
 2. **Test the API**  

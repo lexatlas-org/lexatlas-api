@@ -8,8 +8,8 @@ from uuid import uuid4
 
 router = APIRouter()
 
-# In-memory context store (should be replaced with Redis or CosmosDB in production)
-context_store = {}
+from store.context import set_context, get_context
+
 
 @router.get("/search",
     response_model=SearchResponse,
@@ -27,7 +27,7 @@ def search(q: str, top_k: int = 5):
     """
     results = perform_search(q, top_k)
     context_id = f"ctx-{uuid4()}"
-    context_store[context_id] = [r.excerpt for r in results]
+    set_context(context_id, [r.excerpt for r in results])
 
     return SearchResponse(
         context_id=context_id,
@@ -49,7 +49,8 @@ def query(payload: QueryRequest):
     - Accepts a legal question and a context ID
     - Returns an AI-generated answer using the associated context chunks
     """
-    chunks = context_store.get(payload.context_id)
+    chunks = get_context(payload.context_id)
+    
     if not chunks:
         raise HTTPException(status_code=404, detail="Context ID not found.")
 
