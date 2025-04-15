@@ -36,7 +36,7 @@ done
 AZURE_OPENAI_ENDPOINT=$(az cognitiveservices account show \
   --name "$AZURE_OPENAI_NAME" \
   --resource-group "$AZURE_RESOURCE_GROUP" \
-  --query "properties.endpoint" -o tsv)
+  --query "properties.endpoint" -o tsv)/openai/deployments/$AZURE_OPENAI_DEPLOYMENT
 
 AZURE_OPENAI_KEY=$(az cognitiveservices account keys list \
   --name "$AZURE_OPENAI_NAME" \
